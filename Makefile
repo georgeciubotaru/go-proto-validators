@@ -5,7 +5,7 @@ export PATH := ${GOPATH}/bin:${PATH}
 
 install:
 	@echo "--- Installing govalidators to GOPATH"
-	go install github.com/mwitkow/go-proto-validators/protoc-gen-govalidators
+	go install github.com/georgeciubotaru/go-proto-validators/protoc-gen-govalidators
 
 regenerate_test_gogo:
 	@echo "Regenerating test .proto files with gogo imports"
@@ -43,3 +43,12 @@ regenerate:
 	--proto_path=. \
 	--gogo_out=Mgoogle/protobuf/descriptor.proto=github.com/gogo/protobuf/protoc-gen-gogo/descriptor:. \
 	validator.proto)
+
+generate:
+	@echo "--- Generating validator.proto"
+	(protoc \
+	--proto_path=${GOPATH}/src \
+	--proto_path=. \
+    --go_out=. \
+    --govalidators_out=. *.proto)
+

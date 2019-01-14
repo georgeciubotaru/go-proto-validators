@@ -55,12 +55,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/georgeciubotaru/go-proto-validators"
 	"github.com/gogo/protobuf/gogoproto"
 	"github.com/gogo/protobuf/proto"
 	descriptor "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
 	"github.com/gogo/protobuf/protoc-gen-gogo/generator"
 	"github.com/gogo/protobuf/vanity"
-	"github.com/mwitkow/go-proto-validators"
 )
 
 type plugin struct {
@@ -332,152 +332,305 @@ func (p *plugin) generateProto3Message(file *generator.FileDescriptor, message *
 }
 
 func (p *plugin) generateIntValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator) {
-	if fv.IntGt != nil {
-		p.P(`if !(`, variableName, ` > `, fv.IntGt, `) {`)
-		p.In()
-		errorStr := fmt.Sprintf(`be greater than '%d'`, fv.GetIntGt())
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
-	}
-	if fv.IntLt != nil {
-		p.P(`if !(`, variableName, ` < `, fv.IntLt, `) {`)
-		p.In()
-		errorStr := fmt.Sprintf(`be less than '%d'`, fv.GetIntLt())
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
+	if fv.Optional != nil {
+		if len(variableName) > 1 {
+			if fv.IntGt != nil {
+				p.P(`if !(`, variableName, ` > `, fv.IntGt, `) {`)
+				p.In()
+				errorStr := fmt.Sprintf(`be greater than '%d'`, fv.GetIntGt())
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
+			if fv.IntLt != nil {
+				p.P(`if !(`, variableName, ` < `, fv.IntLt, `) {`)
+				p.In()
+				errorStr := fmt.Sprintf(`be less than '%d'`, fv.GetIntLt())
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
+		}
+	} else {
+		if fv.IntGt != nil {
+			p.P(`if !(`, variableName, ` > `, fv.IntGt, `) {`)
+			p.In()
+			errorStr := fmt.Sprintf(`be greater than '%d'`, fv.GetIntGt())
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
+		}
+		if fv.IntLt != nil {
+			p.P(`if !(`, variableName, ` < `, fv.IntLt, `) {`)
+			p.In()
+			errorStr := fmt.Sprintf(`be less than '%d'`, fv.GetIntLt())
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
+		}
 	}
 }
 
 func (p *plugin) generateLengthValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator) {
-	if fv.LengthGt != nil {
-		p.P(`if !( len(`, variableName, `) > `, fv.LengthGt, `) {`)
-		p.In()
-		errorStr := fmt.Sprintf(`length be greater than '%d'`, fv.GetLengthGt())
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
-	}
+	if fv.Optional != nil {
+		if len(variableName) > 1 {
+			if fv.LengthGt != nil {
+				p.P(`if !( len(`, variableName, `) > `, fv.LengthGt, `) {`)
+				p.In()
+				errorStr := fmt.Sprintf(`length be greater than '%d'`, fv.GetLengthGt())
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
 
-	if fv.LengthLt != nil {
-		p.P(`if !( len(`, variableName, `) < `, fv.LengthLt, `) {`)
-		p.In()
-		errorStr := fmt.Sprintf(`length be less than '%d'`, fv.GetLengthLt())
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
-	}
+			if fv.LengthLt != nil {
+				p.P(`if !( len(`, variableName, `) < `, fv.LengthLt, `) {`)
+				p.In()
+				errorStr := fmt.Sprintf(`length be less than '%d'`, fv.GetLengthLt())
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
 
-	if fv.LengthEq != nil {
-		p.P(`if !( len(`, variableName, `) == `, fv.LengthEq, `) {`)
-		p.In()
-		errorStr := fmt.Sprintf(`length be not equal '%d'`, fv.GetLengthEq())
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
-	}
+			if fv.LengthEq != nil {
+				p.P(`if !( len(`, variableName, `) == `, fv.LengthEq, `) {`)
+				p.In()
+				errorStr := fmt.Sprintf(`length be not equal '%d'`, fv.GetLengthEq())
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
+		}
+	} else {
+		if fv.LengthGt != nil {
+			p.P(`if !( len(`, variableName, `) > `, fv.LengthGt, `) {`)
+			p.In()
+			errorStr := fmt.Sprintf(`length be greater than '%d'`, fv.GetLengthGt())
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
+		}
 
+		if fv.LengthLt != nil {
+			p.P(`if !( len(`, variableName, `) < `, fv.LengthLt, `) {`)
+			p.In()
+			errorStr := fmt.Sprintf(`length be less than '%d'`, fv.GetLengthLt())
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
+		}
+
+		if fv.LengthEq != nil {
+			p.P(`if !( len(`, variableName, `) == `, fv.LengthEq, `) {`)
+			p.In()
+			errorStr := fmt.Sprintf(`length be not equal '%d'`, fv.GetLengthEq())
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
+		}
+	}
 }
 
 func (p *plugin) generateFloatValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator) {
 	upperIsStrict := true
 	lowerIsStrict := true
 
-	// First check for incompatible constraints (i.e flt_lt & flt_lte both defined, etc) and determine the real limits.
-	if fv.FloatEpsilon != nil && fv.FloatLt == nil && fv.FloatGt == nil {
-		fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has no 'float_lt' or 'float_gt' field so setting 'float_epsilon' has no effect.", ccTypeName, fieldName)
-	}
-	if fv.FloatLt != nil && fv.FloatLte != nil {
-		fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has both 'float_lt' and 'float_lte' constraints, only the strictest will be used.", ccTypeName, fieldName)
-		strictLimit := fv.GetFloatLt()
-		if fv.FloatEpsilon != nil {
-			strictLimit += fv.GetFloatEpsilon()
-		}
+	if fv.Optional != nil {
+		if len(variableName) > 1 {
 
-		if fv.GetFloatLte() < strictLimit {
+			// First check for incompatible constraints (i.e flt_lt & flt_lte both defined, etc) and determine the real limits.
+			if fv.FloatEpsilon != nil && fv.FloatLt == nil && fv.FloatGt == nil {
+				fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has no 'float_lt' or 'float_gt' field so setting 'float_epsilon' has no effect.", ccTypeName, fieldName)
+			}
+			if fv.FloatLt != nil && fv.FloatLte != nil {
+				fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has both 'float_lt' and 'float_lte' constraints, only the strictest will be used.", ccTypeName, fieldName)
+				strictLimit := fv.GetFloatLt()
+				if fv.FloatEpsilon != nil {
+					strictLimit += fv.GetFloatEpsilon()
+				}
+
+				if fv.GetFloatLte() < strictLimit {
+					upperIsStrict = false
+				}
+			} else if fv.FloatLte != nil {
+				upperIsStrict = false
+			}
+
+			if fv.FloatGt != nil && fv.FloatGte != nil {
+				fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has both 'float_gt' and 'float_gte' constraints, only the strictest will be used.", ccTypeName, fieldName)
+				strictLimit := fv.GetFloatGt()
+				if fv.FloatEpsilon != nil {
+					strictLimit -= fv.GetFloatEpsilon()
+				}
+
+				if fv.GetFloatGte() > strictLimit {
+					lowerIsStrict = false
+				}
+			} else if fv.FloatGte != nil {
+				lowerIsStrict = false
+			}
+
+			// Generate the constraint checking code.
+			errorStr := ""
+			compareStr := ""
+			if fv.FloatGt != nil || fv.FloatGte != nil {
+				compareStr = fmt.Sprint(`if !(`, variableName)
+				if lowerIsStrict {
+					errorStr = fmt.Sprintf(`be strictly greater than '%g'`, fv.GetFloatGt())
+					if fv.FloatEpsilon != nil {
+						errorStr += fmt.Sprintf(` with a tolerance of '%g'`, fv.GetFloatEpsilon())
+						compareStr += fmt.Sprint(` + `, fv.GetFloatEpsilon())
+					}
+					compareStr += fmt.Sprint(` > `, fv.GetFloatGt(), `) {`)
+				} else {
+					errorStr = fmt.Sprintf(`be greater than or equal to '%g'`, fv.GetFloatGte())
+					compareStr += fmt.Sprint(` >= `, fv.GetFloatGte(), `) {`)
+				}
+				p.P(compareStr)
+				p.In()
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
+
+			if fv.FloatLt != nil || fv.FloatLte != nil {
+				compareStr = fmt.Sprint(`if !(`, variableName)
+				if upperIsStrict {
+					errorStr = fmt.Sprintf(`be strictly lower than '%g'`, fv.GetFloatLt())
+					if fv.FloatEpsilon != nil {
+						errorStr += fmt.Sprintf(` with a tolerance of '%g'`, fv.GetFloatEpsilon())
+						compareStr += fmt.Sprint(` - `, fv.GetFloatEpsilon())
+					}
+					compareStr += fmt.Sprint(` < `, fv.GetFloatLt(), `) {`)
+				} else {
+					errorStr = fmt.Sprintf(`be lower than or equal to '%g'`, fv.GetFloatLte())
+					compareStr += fmt.Sprint(` <= `, fv.GetFloatLte(), `) {`)
+				}
+				p.P(compareStr)
+				p.In()
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
+		}
+	} else {
+		// First check for incompatible constraints (i.e flt_lt & flt_lte both defined, etc) and determine the real limits.
+		if fv.FloatEpsilon != nil && fv.FloatLt == nil && fv.FloatGt == nil {
+			fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has no 'float_lt' or 'float_gt' field so setting 'float_epsilon' has no effect.", ccTypeName, fieldName)
+		}
+		if fv.FloatLt != nil && fv.FloatLte != nil {
+			fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has both 'float_lt' and 'float_lte' constraints, only the strictest will be used.", ccTypeName, fieldName)
+			strictLimit := fv.GetFloatLt()
+			if fv.FloatEpsilon != nil {
+				strictLimit += fv.GetFloatEpsilon()
+			}
+
+			if fv.GetFloatLte() < strictLimit {
+				upperIsStrict = false
+			}
+		} else if fv.FloatLte != nil {
 			upperIsStrict = false
 		}
-	} else if fv.FloatLte != nil {
-		upperIsStrict = false
-	}
 
-	if fv.FloatGt != nil && fv.FloatGte != nil {
-		fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has both 'float_gt' and 'float_gte' constraints, only the strictest will be used.", ccTypeName, fieldName)
-		strictLimit := fv.GetFloatGt()
-		if fv.FloatEpsilon != nil {
-			strictLimit -= fv.GetFloatEpsilon()
-		}
+		if fv.FloatGt != nil && fv.FloatGte != nil {
+			fmt.Fprintf(os.Stderr, "WARNING: field %v.%v has both 'float_gt' and 'float_gte' constraints, only the strictest will be used.", ccTypeName, fieldName)
+			strictLimit := fv.GetFloatGt()
+			if fv.FloatEpsilon != nil {
+				strictLimit -= fv.GetFloatEpsilon()
+			}
 
-		if fv.GetFloatGte() > strictLimit {
+			if fv.GetFloatGte() > strictLimit {
+				lowerIsStrict = false
+			}
+		} else if fv.FloatGte != nil {
 			lowerIsStrict = false
 		}
-	} else if fv.FloatGte != nil {
-		lowerIsStrict = false
-	}
 
-	// Generate the constraint checking code.
-	errorStr := ""
-	compareStr := ""
-	if fv.FloatGt != nil || fv.FloatGte != nil {
-		compareStr = fmt.Sprint(`if !(`, variableName)
-		if lowerIsStrict {
-			errorStr = fmt.Sprintf(`be strictly greater than '%g'`, fv.GetFloatGt())
-			if fv.FloatEpsilon != nil {
-				errorStr += fmt.Sprintf(` with a tolerance of '%g'`, fv.GetFloatEpsilon())
-				compareStr += fmt.Sprint(` + `, fv.GetFloatEpsilon())
+		// Generate the constraint checking code.
+		errorStr := ""
+		compareStr := ""
+		if fv.FloatGt != nil || fv.FloatGte != nil {
+			compareStr = fmt.Sprint(`if !(`, variableName)
+			if lowerIsStrict {
+				errorStr = fmt.Sprintf(`be strictly greater than '%g'`, fv.GetFloatGt())
+				if fv.FloatEpsilon != nil {
+					errorStr += fmt.Sprintf(` with a tolerance of '%g'`, fv.GetFloatEpsilon())
+					compareStr += fmt.Sprint(` + `, fv.GetFloatEpsilon())
+				}
+				compareStr += fmt.Sprint(` > `, fv.GetFloatGt(), `) {`)
+			} else {
+				errorStr = fmt.Sprintf(`be greater than or equal to '%g'`, fv.GetFloatGte())
+				compareStr += fmt.Sprint(` >= `, fv.GetFloatGte(), `) {`)
 			}
-			compareStr += fmt.Sprint(` > `, fv.GetFloatGt(), `) {`)
-		} else {
-			errorStr = fmt.Sprintf(`be greater than or equal to '%g'`, fv.GetFloatGte())
-			compareStr += fmt.Sprint(` >= `, fv.GetFloatGte(), `) {`)
+			p.P(compareStr)
+			p.In()
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
 		}
-		p.P(compareStr)
-		p.In()
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
-	}
 
-	if fv.FloatLt != nil || fv.FloatLte != nil {
-		compareStr = fmt.Sprint(`if !(`, variableName)
-		if upperIsStrict {
-			errorStr = fmt.Sprintf(`be strictly lower than '%g'`, fv.GetFloatLt())
-			if fv.FloatEpsilon != nil {
-				errorStr += fmt.Sprintf(` with a tolerance of '%g'`, fv.GetFloatEpsilon())
-				compareStr += fmt.Sprint(` - `, fv.GetFloatEpsilon())
+		if fv.FloatLt != nil || fv.FloatLte != nil {
+			compareStr = fmt.Sprint(`if !(`, variableName)
+			if upperIsStrict {
+				errorStr = fmt.Sprintf(`be strictly lower than '%g'`, fv.GetFloatLt())
+				if fv.FloatEpsilon != nil {
+					errorStr += fmt.Sprintf(` with a tolerance of '%g'`, fv.GetFloatEpsilon())
+					compareStr += fmt.Sprint(` - `, fv.GetFloatEpsilon())
+				}
+				compareStr += fmt.Sprint(` < `, fv.GetFloatLt(), `) {`)
+			} else {
+				errorStr = fmt.Sprintf(`be lower than or equal to '%g'`, fv.GetFloatLte())
+				compareStr += fmt.Sprint(` <= `, fv.GetFloatLte(), `) {`)
 			}
-			compareStr += fmt.Sprint(` < `, fv.GetFloatLt(), `) {`)
-		} else {
-			errorStr = fmt.Sprintf(`be lower than or equal to '%g'`, fv.GetFloatLte())
-			compareStr += fmt.Sprint(` <= `, fv.GetFloatLte(), `) {`)
+			p.P(compareStr)
+			p.In()
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
 		}
-		p.P(compareStr)
-		p.In()
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
 	}
 }
 
 func (p *plugin) generateStringValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator) {
-	if fv.Regex != nil {
-		p.P(`if !`, p.regexName(ccTypeName, fieldName), `.MatchString(`, variableName, `) {`)
-		p.In()
-		errorStr := "be a string conforming to regex " + strconv.Quote(fv.GetRegex())
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
+	if fv.Optional != nil {
+		if len(variableName) > 1 {
+			if fv.Regex != nil {
+				p.P(`if !`, p.regexName(ccTypeName, fieldName), `.MatchString(`, variableName, `) {`)
+				p.In()
+				errorStr := "be a string conforming to regex " + strconv.Quote(fv.GetRegex())
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
+			if fv.StringNotEmpty != nil && fv.GetStringNotEmpty() {
+				p.P(`if `, variableName, ` == "" {`)
+				p.In()
+				errorStr := "not be an empty string"
+				p.generateErrorString(variableName, fieldName, errorStr, fv)
+				p.Out()
+				p.P(`}`)
+			}
+			p.generateLengthValidator(variableName, ccTypeName, fieldName, fv)
+		}
+	} else {
+		if fv.Regex != nil {
+			p.P(`if !`, p.regexName(ccTypeName, fieldName), `.MatchString(`, variableName, `) {`)
+			p.In()
+			errorStr := "be a string conforming to regex " + strconv.Quote(fv.GetRegex())
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
+		}
+		if fv.StringNotEmpty != nil && fv.GetStringNotEmpty() {
+			p.P(`if `, variableName, ` == "" {`)
+			p.In()
+			errorStr := "not be an empty string"
+			p.generateErrorString(variableName, fieldName, errorStr, fv)
+			p.Out()
+			p.P(`}`)
+		}
+		p.generateLengthValidator(variableName, ccTypeName, fieldName, fv)
 	}
-	if fv.StringNotEmpty != nil && fv.GetStringNotEmpty() {
-		p.P(`if `, variableName, ` == "" {`)
-		p.In()
-		errorStr := "not be an empty string"
-		p.generateErrorString(variableName, fieldName, errorStr, fv)
-		p.Out()
-		p.P(`}`)
-	}
-	p.generateLengthValidator(variableName, ccTypeName, fieldName, fv)
 
 }
 
