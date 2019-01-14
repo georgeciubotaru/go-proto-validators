@@ -201,23 +201,27 @@ func (p *plugin) generateProto2Message(file *generator.FileDescriptor, message *
 		if field.IsString() {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "string")
+			} else {
+				p.generateStringValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-			p.generateStringValidator(variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedInt(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "int")
+			} else {
+				p.generateIntValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-			p.generateIntValidator(variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedFloat(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "float")
+			} else {
+				p.generateFloatValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-			p.generateFloatValidator(variableName, ccTypeName, fieldName, fieldValidator)
 		} else if field.IsBytes() {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "length")
+			} else {
+				p.generateLengthValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-			p.generateLengthValidator(variableName, ccTypeName, fieldName, fieldValidator)
 		} else if field.IsMessage() {
 			if repeated && nullable {
 				variableName = "*(item)"
@@ -291,23 +295,27 @@ func (p *plugin) generateProto3Message(file *generator.FileDescriptor, message *
 		if field.IsString() {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "string")
+			} else {
+				p.generateStringValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-			p.generateStringValidator(variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedInt(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "int")
+			} else {
+				p.generateIntValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-			p.generateIntValidator(variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedFloat(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "float")
+			} else {
+				p.generateFloatValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-			p.generateFloatValidator(variableName, ccTypeName, fieldName, fieldValidator)
 		} else if field.IsBytes() {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "length")
+			} else {
+				p.generateLengthValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-			p.generateLengthValidator(variableName, ccTypeName, fieldName, fieldValidator)
 		} else if field.IsMessage() {
 			if p.validatorWithMessageExists(fieldValidator) {
 				if nullable && !repeated {
