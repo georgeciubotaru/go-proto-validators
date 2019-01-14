@@ -6,7 +6,7 @@ package validator
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
+	protobuf "google/protobuf"
 	math "math"
 )
 
@@ -216,7 +216,7 @@ func (m *FieldValidator) GetOptional() bool {
 }
 
 var E_Field = &proto.ExtensionDesc{
-	ExtendedType:  (*descriptor.FieldOptions)(nil),
+	ExtendedType:  (*protobuf.FieldOptions)(nil),
 	ExtensionType: (*FieldValidator)(nil),
 	Field:         65020,
 	Name:          "validator.field",

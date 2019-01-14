@@ -48,6 +48,7 @@ generate:
 	@echo "--- Generating validator.proto"
 	(protoc \
 	--proto_path=${GOPATH}/src \
+	--proto_path=${GOPATH}/src/github.com/gogo/protobuf/protobuf \
 	--proto_path=. \
     --go_out=. \
     --govalidators_out=. *.proto)
