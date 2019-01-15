@@ -126,8 +126,6 @@ func (p *plugin) isSupportedInt(field *descriptor.FieldDescriptorProto) bool {
 		return true
 	case descriptor.FieldDescriptorProto_TYPE_SINT32, descriptor.FieldDescriptorProto_TYPE_SINT64:
 		return true
-	case descriptor.FieldDescriptorProto_TYPE_ENUM:
-		return true
 	}
 	return false
 }
@@ -206,14 +204,14 @@ func (p *plugin) generateProto2Message(file *generator.FileDescriptor, message *
 			} else {
 				p.generateStringValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
+		} else if field.IsEnum() {
+			p.generateEnumValidator(field, variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedInt(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "int")
 			} else {
 				p.generateIntValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-		} else if field.IsEnum() {
-			p.generateEnumValidator(field, variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedFloat(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "float")
@@ -302,14 +300,14 @@ func (p *plugin) generateProto3Message(file *generator.FileDescriptor, message *
 			} else {
 				p.generateStringValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
+		} else if field.IsEnum() {
+			p.generateEnumValidator(field, variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedInt(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "int")
 			} else {
 				p.generateIntValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
-		} else if field.IsEnum() {
-			p.generateEnumValidator(field, variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedFloat(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "float")
