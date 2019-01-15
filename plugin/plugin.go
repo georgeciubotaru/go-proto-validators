@@ -126,6 +126,8 @@ func (p *plugin) isSupportedInt(field *descriptor.FieldDescriptorProto) bool {
 		return true
 	case descriptor.FieldDescriptorProto_TYPE_SINT32, descriptor.FieldDescriptorProto_TYPE_SINT64:
 		return true
+	case descriptor.FieldDescriptorProto_TYPE_ENUM:
+		return true
 	}
 	return false
 }
@@ -210,6 +212,8 @@ func (p *plugin) generateProto2Message(file *generator.FileDescriptor, message *
 			} else {
 				p.generateIntValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
+		} else if field.IsEnum() {
+			p.generateEnumValidator(field, variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedFloat(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "float")
@@ -304,6 +308,8 @@ func (p *plugin) generateProto3Message(file *generator.FileDescriptor, message *
 			} else {
 				p.generateIntValidator(variableName, ccTypeName, fieldName, fieldValidator)
 			}
+		} else if field.IsEnum() {
+			p.generateEnumValidator(field, variableName, ccTypeName, fieldName, fieldValidator)
 		} else if p.isSupportedFloat(field) {
 			if fieldValidator.GetOptional() {
 				p.generateOptionalValidator(variableName, ccTypeName, fieldName, fieldValidator, "float")
@@ -530,6 +536,17 @@ func (p *plugin) generateStringValidator(variableName string, ccTypeName string,
 	}
 	p.generateLengthValidator(variableName, ccTypeName, fieldName, fv)
 
+}
+
+func (p *plugin) generateEnumValidator(field *descriptor.FieldDescriptorProto, variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator) {
+	if fv.GetIsInEnum() {
+		enum := p.ObjectNamed(field.GetTypeName()).(*generator.EnumDescriptor)
+		p.P(`if _, ok := `, enum.GetName(), "_name[int32(", variableName, ")]; !ok {")
+		p.In()
+		p.generateErrorString(variableName, fieldName, fmt.Sprintf("be a valid %s field", enum.GetName()), fv)
+		p.Out()
+		p.P(`}`)
+	}
 }
 
 func (p *plugin) generateRepeatedCountValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator) {
